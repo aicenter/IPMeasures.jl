@@ -28,13 +28,35 @@ k_gaussian(x::T,γ) where {T<:AbstractVector} = zero(eltype(x))
 """
 mmdg(x,y,γ) = k_gaussian(x,γ) + k_gaussian(y,γ) - 2*k_gaussian(x,y,γ)
 
+
+"""
+		k_imq(x,y,γ)
+		k_imq(x,γ)
+
+		kernel matrix corresponding to the inverse multi-quadratic kernel imq = \frac{C}{C + \|X - Y\|} kernel with `γ` on diagonal
+"""
+k_imq(x,y,c) = sum( c./ (c .+ pairwisel2(x,y)))/(size(x,2) * size(y,2))
+k_imq(x::T,c) where {T<:AbstractMatrix} = sum(c ./(c .+ pairwisel2(x)))/(size(x,2) * (size(x,2) -1 )) 
+k_imq(x::T,c) where {T<:AbstractVector} = zero(eltype(x)) 
+
+doc"""
+		mmd_imq(x,y,γ)
+
+		mmd with inverse polynomial kernel $\frac{C}{C + \|X - Y\|}$ used
+		in Tolstikhin, Ilya, et al. "Wasserstein Auto-Encoders." arXiv preprint arXiv:1711.01558 (2017)
+
+		$c$ being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
+
+"""
+mmd_imq(x,y,c) = k_imq(x,c) + k_imq(y,c) - 2*k_imq(x,y,c)
+
 """
 
 		rqfun(x)
 
 		kernel from 
 """
-rqfun(x,α) where T = (1 + (x + eltype(x)(1e-6))/2α)^-α 
+rqfun(x,α) = (1 + (x + eltype(x)(1e-6))/2α)^-α 
 
 """
 		k_rqh(x,y,α)
