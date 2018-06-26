@@ -1,5 +1,8 @@
 module IPMeasures
+using StatsBase
 
+
+samplecolumns(x,n) =  (size(x,2) > n) ? x[:,sample(1:size(x,2),n,replace = false)] : x
 
 """
 	pairwisel2(x,y)
@@ -23,10 +26,12 @@ k_gaussian(x::T,γ) where {T<:AbstractVector} = zero(eltype(x))
 
 """
 		mmdg(x,y,γ)
+		mmdg(x,y,γ,n)
 
-		mmd with gaussian kernel of bandwidth `γ`
+		mmd with gaussian kernel of bandwidth `γ` using at most `n` samples
 """
 mmdg(x,y,γ) = k_gaussian(x,γ) + k_gaussian(y,γ) - 2*k_gaussian(x,y,γ)
+mmdg(x,y,γ,n) = mmdg(samplecolumns(x,n), samplecolumns(y,n), γ)
 
 
 """
@@ -49,6 +54,7 @@ doc"""
 
 """
 mmd_imq(x,y,c) = k_imq(x,c) + k_imq(y,c) - 2*k_imq(x,y,c)
+mmd_imq(x,y,c,n) = mmd_imq(samplecolumns(x,n), samplecolumns(y,n), c)
 
 """
 
@@ -76,5 +82,5 @@ k_rqh(x::T,α) where {T<:AbstractVector} = zero(eltype(x))
 
 """
 mmdrq(x,y,α) = k_rqh(x,α) + k_rqh(y,α) - 2*k_rqh(x,y,α)
-
+mmdrq(x,y,α,n) = mmdrq(samplecolumns(x,n), samplecolumns(y,n), α)
 end # module
