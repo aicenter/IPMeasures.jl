@@ -35,22 +35,22 @@ mmdg(x,y,γ,n) = mmdg(samplecolumns(x,n), samplecolumns(y,n), γ)
 
 
 """
-		k_imq(x,y,γ)
-		k_imq(x,γ)
+		k_imq(x,c,γ)
+		k_imq(x,c)
 
-		kernel matrix corresponding to the inverse multi-quadratic kernel imq = \frac{C}{C + \|X - Y\|} kernel with `γ` on diagonal
+		kernel matrix corresponding to the inverse multi-quadratic kernel ``imq = \\frac{C}{C + \\|X - Y\\|}`` kernel with `c` on diagonal
 """
 k_imq(x,y,c) = sum( c./ (c .+ pairwisel2(x,y)))/(size(x,2) * size(y,2))
 k_imq(x::T,c) where {T<:AbstractMatrix} = sum(c ./(c .+ pairwisel2(x)))/(size(x,2) * (size(x,2) -1 )) 
 k_imq(x::T,c) where {T<:AbstractVector} = zero(eltype(x)) 
 
-doc"""
+"""
 		mmd_imq(x,y,γ)
 
-		mmd with inverse polynomial kernel $\frac{C}{C + \|X - Y\|}$ used
+		mmd with inverse polynomial kernel ``\\frac{C}{C + \\|X - Y\\|}`` used
 		in Tolstikhin, Ilya, et al. "Wasserstein Auto-Encoders." arXiv preprint arXiv:1711.01558 (2017)
 
-		$c$ being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
+		`c` being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
 
 """
 mmd_imq(x,y,c) = k_imq(x,c) + k_imq(y,c) - 2*k_imq(x,y,c)
