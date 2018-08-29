@@ -11,8 +11,8 @@ samplecolumns(x,n) =  (size(x,2) > n) ? x[:,sample(1:size(x,2),n,replace = false
 	Calculates pairwise distances with L2 distance between `x` and `y` or `x` and `x`
 
 """
-pairwisel2(x,y) = -2 .* x' * y .+ sum(x.^2,1)' .+ sum(y.^2,1)
-pairwisel2(x) = -2 .* x' * x .+ sum(x.^2,1)' .+ sum(x.^2,1)
+pairwisel2(x,y) = -2 .* x' * y .+ sum(x.^2, dims = 1)' .+ sum(y.^2,dims = 1)
+pairwisel2(x) = -2 .* x' * x .+ sum(x.^2, dims = 1)' .+ sum(x.^2,dims = 1)
 
 """
 		k_gaussian(x,y,γ)
@@ -23,6 +23,25 @@ pairwisel2(x) = -2 .* x' * x .+ sum(x.^2,1)' .+ sum(x.^2,1)
 k_gaussian(x,y,γ) = sum(exp.(-γ .* pairwisel2(x,y)))/(size(x,2) * size(y,2))
 k_gaussian(x::T,γ) where {T<:AbstractMatrix} = sum(exp.(-γ .* pairwisel2(x)))/(size(x,2) * (size(x,2) -1 )) 
 k_gaussian(x::T,γ) where {T<:AbstractVector} = zero(eltype(x)) 
+
+# mapsum(f, d, idx) = sum(f(d[j,i]) for i in idx for j in idx)
+# mapsum(f, d, rowidx, colidx) = sum(f(d[i,j]) for j in colidx for i in rowidx )
+mapsum(f, d, idx) = (s = 0.0; @inbounds for j in idx, i in idx s+= f(d[i,j]) end; s)
+mapsum(f, d, rowidx, colidx) = (s = 0.0; @inbounds for i in rowidx, j in colidx s+= f(d[i,j]) end; s)
+
+null_distribution(x, γ::Real, n) = _null_distribution(pairwisel2(x), γ, n)
+null_distribution(x, γs::Vector, n) = (d = pairwisel2(x); [_null_distribution(d, γ, n) for γ in γs]) 
+function _null_distribution(d, γ, n)
+	d *= -γ
+	l = size(d,2)
+	mapreduce(+, 1:n) do _
+		idx = sample(1:l, div(l,2))
+		cidx = setdiff(1:l, idx)
+		li, lc = length(idx), length(cidx)
+		(mapsum(exp, d, idx) - li)/(li * (li+1)) + (mapsum(exp, d, cidx) - lc)/(lc * (lc+1)) - 2* mapsum(exp, d, idx, cidx)/ (lc*li)
+	end
+end
+
 
 """
 		mmdg(x,y,γ)
