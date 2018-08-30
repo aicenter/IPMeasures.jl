@@ -13,6 +13,13 @@ samplecolumns(x,n) =  (size(x,2) > n) ? x[:,sample(1:size(x,2),n,replace = false
 """
 pairwisel2(x,y) = -2 .* x' * y .+ sum(x.^2, dims = 1)' .+ sum(y.^2,dims = 1)
 pairwisel2(x) = -2 .* x' * x .+ sum(x.^2, dims = 1)' .+ sum(x.^2,dims = 1)
+function mahalanobis(Σ,x)
+	Σx = Σ*x
+	nx = sum( x.*Σx, dims = 1)
+	nx .+ nx' - 2*x'*Σx 
+end
+
+
 
 """
 		k_gaussian(x,y,γ)
