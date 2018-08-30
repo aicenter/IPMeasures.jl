@@ -1,5 +1,5 @@
 using IPMeasures, Test
-using IPMeasures: mapsum, pairwisel2, mmd, GaussianKernel
+using IPMeasures: mapsum, pairwisel2, mmd, GaussianKernel, RQKernel, IMQKernel
 
 @testset "mapsum" begin
 	d = randn(5,5)
@@ -9,12 +9,13 @@ using IPMeasures: mapsum, pairwisel2, mmd, GaussianKernel
 end
 
 
-@testset "Gaussian MMD" begin
+@testset "kernels" begin
 	x = randn(3,10)
 	d = pairwisel2(x)
-	k = GaussianKernel(1.0)
 	i, j = [1,2,3], [4,5,6]
-	@test mmd(k, d, i, j) ≈ mmd(k, x[:,i],x[:,j])
-	@test mmd(k, randn(1,1000), randn(1,1000)) < 1e-2
+	for k in [GaussianKernel(1.0), RQKernel, IMQKernel]
+		@test mmd(k, d, i, j) ≈ mmd(k, x[:,i],x[:,j])
+		@test mmd(k, randn(1,1000), randn(1,1000)) < 1e-2
+	end
 end
 
