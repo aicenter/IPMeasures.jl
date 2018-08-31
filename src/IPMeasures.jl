@@ -1,25 +1,9 @@
 module IPMeasures
 using StatsBase
 include("kernels.jl")
+include("distances.jl")
 
 samplecolumns(x,n) =  (size(x,2) > n) ? x[:,sample(1:size(x,2),n,replace = false)] : x
-
-"""
-	pairwisel2(x,y)
-	pairwisel2(x)
-
-	Calculates pairwise distances with L2 distance between `x` and `y` or `x` and `x`
-
-"""
-pairwisel2(x,y) = -2 .* x' * y .+ sum(x.^2, dims = 1)' .+ sum(y.^2,dims = 1)
-pairwisel2(x) = -2 .* x' * x .+ sum(x.^2, dims = 1)' .+ sum(x.^2,dims = 1)
-function mahalanobis(Σ,x)
-	Σx = Σ*x
-	nx = sum( x.*Σx, dims = 1)
-	nx .+ nx' - 2*x'*Σx 
-end
-
-
 
 """
 		k_gaussian(x,y,γ)
@@ -28,9 +12,9 @@ end
 
 		kernel matrix corresponding to the gaussian kernel with `γ` on diagonal
 """
-kernelsum(k::AbstractKernel,x,y) = sum(k.(pairwisel2(x,y)))/(size(x,2) * size(y,2))
-kernelsum(k::AbstractKernel,x::T) where {T<:AbstractMatrix} = (l = size(x,2); sum(k.(pairwisel2(x)))/(l^2 - l)) 
-kernelsum(k::AbstractKernel,x::T) where {T<:AbstractVector} = zero(eltype(x)) 
+kernelsum(k::AbstractKernel, x, y, distfun) = sum(k.(distfun(x,y)))/(size(x,2) * size(y,2))
+kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractMatrix} = (l = size(x,2); sum(k.(distfun(x,x)))/(l^2 - l)) 
+kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractVector} = zero(eltype(x)) 
 
 
 """
@@ -39,9 +23,9 @@ kernelsum(k::AbstractKernel,x::T) where {T<:AbstractVector} = zero(eltype(x))
 
 		mmd with gaussian kernel of bandwidth `γ` using at most `n` samples
 """
-mmd(k::AbstractKernel, x, y) = kernelsum(k, x) + kernelsum(k, y) - 2*kernelsum(k, x, y)
-mmd(k::AbstractKernel, x, y, n::Int) = mmd(k, samplecolumns(x,n), samplecolumns(y,n))
-function mmd(k::AbstractKernel, d, idx, cidx)
+mmd(k::AbstractKernel, x, y, distfun = pairwisel2) = kernelsum(k, x, distfun) + kernelsum(k, y, distfun) - 2*kernelsum(k, x, y, distfun)
+mmd(k::AbstractKernel, x, y, n::Int, distfun = pairwisel2) = mmd(k, samplecolumns(x,n), samplecolumns(y,n), distfun)
+function mmdfromdist(k::AbstractKernel, d, idx, cidx)
 	li, lc = length(idx), length(cidx)
 	kxx = mapsum(k, d, idx)/(li^2 - li)
 	kyy = mapsum(k, d, cidx)/(lc^2 - lc)
@@ -65,7 +49,7 @@ function _null_distribution(k, d, n, l)
 		idx = sample(1:ns, l, replace = false)
 		cidx = setdiff(1:ns, idx)
 		cidx = sample(cidx, min(l, length(cidx)), replace = false) 
-		mmd(k, d, idx, cidx)
+		mmdfromdist(k, d, idx, cidx)
 	end
 end
 
