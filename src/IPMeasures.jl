@@ -13,7 +13,7 @@ samplecolumns(x,n) =  (size(x,2) > n) ? x[:,sample(1:size(x,2),n,replace = false
 		kernel matrix corresponding to the gaussian kernel with `γ` on diagonal
 """
 kernelsum(k::AbstractKernel, x, y, distfun) = sum(k.(distfun(x,y)))/(size(x,2) * size(y,2))
-kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractMatrix} = (l = size(x,2); sum(k.(distfun(x,x)))/(l^2 - l)) 
+kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractMatrix} = (l = size(x,2); (sum(k.(distfun(x,x))) - l*k(0.0))/(l^2 - l)) 
 kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractVector} = zero(eltype(x)) 
 
 
@@ -27,8 +27,8 @@ mmd(k::AbstractKernel, x, y, distfun = pairwisel2) = kernelsum(k, x, distfun) + 
 mmd(k::AbstractKernel, x, y, n::Int, distfun = pairwisel2) = mmd(k, samplecolumns(x,n), samplecolumns(y,n), distfun)
 function mmdfromdist(k::AbstractKernel, d, idx, cidx)
 	li, lc = length(idx), length(cidx)
-	kxx = mapsum(k, d, idx)/(li^2 - li)
-	kyy = mapsum(k, d, cidx)/(lc^2 - lc)
+	kxx = (mapsum(k, d, idx) - li*k(0.0))/(li^2 - li)
+	kyy = (mapsum(k, d, cidx) - lc*k(0.0))/(lc^2 - lc)
 	kyx = mapsum(k, d, idx, cidx)/ (lc*li)
 	kxx + kyy -2kyx
 end
