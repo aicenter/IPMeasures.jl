@@ -12,8 +12,8 @@ samplecolumns(x,n) =  (size(x,2) > n) ? x[:,sample(1:size(x,2),n,replace = false
 
 		kernel matrix corresponding to the gaussian kernel with `γ` on diagonal
 """
-kernelsum(k::AbstractKernel, x, y, distfun) = sum(k.(distfun(x,y)))/(size(x,2) * size(y,2))
-kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractMatrix} = (l = size(x,2); (sum(k.(distfun(x,x))) - l*k(0.0))/(l^2 - l)) 
+kernelsum(k::AbstractKernel, x, y, distfun) = sum(k(distfun(x,y)))/(size(x,2) * size(y,2))
+kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractMatrix} = (l = size(x,2); (sum(k(distfun(x,x))) - l*k(0.0))/(l^2 - l)) 
 kernelsum(k::AbstractKernel, x::T, distfun) where {T<:AbstractVector} = zero(eltype(x)) 
 
 
