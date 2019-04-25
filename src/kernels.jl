@@ -10,6 +10,7 @@ struct GaussianKernel{T<:Number} <: AbstractKernel
 end
 
 (m::GaussianKernel)(x::Number) = exp(-m.γ * x)
+(m::GaussianKernel)(x::AbstractArray) = exp.(-m.γ .* x)
 
 
 """
@@ -26,6 +27,7 @@ struct IMQKernel{T<:Number} <: AbstractKernel
 end
 
 (m::IMQKernel)(x::Number) = m.c/ (m.c + x)
+(m::IMQKernel)(x::AbstractArray) = m.c ./ (m.c .+ x)
 
 """
 	RQ kernel ``\\frac{C}{C + \\|X - Y\\|}`` used
@@ -39,4 +41,5 @@ struct RQKernel{T<:Number} <: AbstractKernel
 end
 
 (m::RQKernel)(x::Number) = (1 + (x + eps(x))/2m.α)^-m.α 
+(m::RQKernel)(x::AbstractArray) = (1 .+(x .+ eps(x)) ./ (2m.α) ).^-m.α 
 
