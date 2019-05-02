@@ -1,4 +1,5 @@
 using LinearAlgebra
+using IPMeasures
 """
 _mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
 
@@ -66,4 +67,20 @@ function _mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
     )
 
     (mmd2, var_est)
+end
+
+function score(k::GaussianKernel, X, Y)
+    KXX = k.(pairwisel2(X,X))
+    KXY = k.(pairwisel2(X,Y))
+    KYY = k.(pairwisel2(y,Y))
+    m, v = _mmd2_and_variance(KXX, KXY, KYY, true)
+    m / sqrt(v)
+end
+
+function score(k::IMQKernel, X, Y)
+    KXX = k.(pairwisel2(X,X))
+    KXY = k.(pairwisel2(X,Y))
+    KYY = k.(pairwisel2(y,Y))
+    m, v = _mmd2_and_variance(KXX, KXY, KYY, false)
+    m / sqrt(v)
 end
