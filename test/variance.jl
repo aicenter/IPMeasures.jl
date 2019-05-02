@@ -1,5 +1,10 @@
 using LinearAlgebra
-function _mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=False, biased=False)
+"""
+_mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
+
+calculates the mmd and variance according to https://arxiv.org/pdf/1611.04488.pdf
+"""
+function _mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
     @assert size(K_XX, 2) == size(K_XY, 2) == size(K_XX, 2)
     m = size(K_XX, 2)  # Assumes X, Y are same shape
 
