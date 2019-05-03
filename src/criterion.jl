@@ -108,4 +108,4 @@ crit_mxy_over_sum(k, x, y)
 
 Calculates criterion for selection of the kernel width as MMD(X, Y) / (MMD(X,X) + MMD(Y, Y))
 """
-crit_mxy_over_sum(k, x, y, distfun = pairwisel2) = mmd(k, x, y, distfun) / (abs(mmd(k, split2(x)...), distfun) + abs(mmd(k, split2(y)..., distfun)))
+crit_mxy_over_sum(k, x, y, distfun = pairwisel2) = mmd(k, x, y, distfun) / (abs(mmd(k, split2(x)..., distfun)) + abs(mmd(k, split2(y)..., distfun)))
