@@ -1,5 +1,5 @@
 module IPMeasures
-using StatsBase
+using StatsBase, LinearAlgebra
 include("kernels.jl")
 include("distances.jl")
 include("criterion.jl")

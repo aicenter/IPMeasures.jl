@@ -1,5 +1,5 @@
 using IPMeasures, Test
-using IPMeasures: mapsum, pairwisel2, mahalanobis, mmd, GaussianKernel, RQKernel, IMQKernel, Mahalanobis, mmdfromdist, _mmd2_and_variance
+using IPMeasures: mapsum, pairwisel2, mahalanobis, mmd, GaussianKernel, RQKernel, IMQKernel, Mahalanobis, mmdfromdist, mmd2_and_variance
 
 function distances(Σ,x)
 	d = fill(0.0,size(x,2),size(x,2))
@@ -47,7 +47,7 @@ end
 	d = pairwisel2(x)
 	i, j = [1,2,3], [4,5,6]
 	for k in [GaussianKernel(1.0), RQKernel(1.0), IMQKernel(1.0)]
-		@test mmdfromdist(k, d, i, j) ≈ mmd(k, x[:,i],x[:,j])
+		@test mmdfromdist(k, d, i, j) .≈ mmd(k, x[:,i],x[:,j])
 		@test mmd(k, randn(1,1000), randn(1,1000)) < 1e-2
 	end
 end
@@ -76,7 +76,7 @@ end
     c = [0 1 1; 1 0 1; 0 1 0]'
     m, v = mmd2_and_variance(a, b, c)
     @test m ≈ 0.33333333
-    @test v ≈ -0.01851851
+    @test v ≈ -0.0185185185185
 
     a = [0.31067363 0.17995522 0.69170826
         0.10956897 0.43168305 0.13072019
@@ -95,5 +95,5 @@ end
     @test v ≈ 0.33610499
 end
 
-include("criterion.jl")
+include("test/criterion.jl")
 

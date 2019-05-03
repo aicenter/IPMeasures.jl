@@ -1,6 +1,3 @@
-using IPMeasures, StatsBase, Distributions, LinearAlgebra
-using IPMeasures: mmd, GaussianKernel, IMQKernel, pairwisel2
-
 """
 mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
 

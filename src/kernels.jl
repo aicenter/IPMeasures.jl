@@ -41,5 +41,5 @@ struct RQKernel{T<:Number} <: AbstractKernel
 end
 
 (m::RQKernel)(x::Number) = (1 + (x + eps(x))/2m.α)^-m.α 
-(m::RQKernel)(x::AbstractArray) = (1 .+(x .+ eps(x)) ./ (2m.α) ).^-m.α 
+(m::RQKernel)(x::AbstractArray) = (1 .+(x .+ eps(eltype(x))) ./ (2m.α) ).^-m.α 
 
