@@ -99,7 +99,7 @@ end
 """
 crit_mxy_over_mltpl(k, x, y)
 
-Calculates criterion for selection of the kernel width as MMD(X, Y) / (MMD(X,X) * MMD(Y, Y))
+Calculates criterion for selection of the kernel width as MMD(X, Y) / SQRT(MMD(X,X) * MMD(Y, Y))
 """
 crit_mxy_over_mltpl(k, x, y, distfun = pairwisel2) = mmd(k, x, y, distfun) / sqrt(abs(mmd(k, split2(x)..., distfun) * mmd(k, split2(y)..., distfun)))
 
