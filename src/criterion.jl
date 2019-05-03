@@ -1,13 +1,12 @@
-using LinearAlgebra
-using IPMeasures
-using Test
+using IPMeasures, StatsBase, Distributions, LinearAlgebra
+using IPMeasures: mmd, GaussianKernel, IMQKernel, pairwisel2
 
 """
-_mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
+mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
 
 calculates the mmd and variance according to https://arxiv.org/pdf/1611.04488.pdf
 """
-function _mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
+function mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
     @assert size(K_XX, 2) == size(K_XY, 2) == size(K_XX, 2)
     m = size(K_XX, 2)  # Assumes X, Y are same shape
 
@@ -36,8 +35,6 @@ function _mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
     Kt_YY_sum = sum(Kt_YY_sums)
     K_XY_sum = sum(K_XY_sums_0)
 
-    # TODO: turn these into dot products?
-    # should figure out if that's faster or not on GPU / with theano...
     Kt_XX_2_sum = sum(K_XX.^2) - sum_diag2_X
     Kt_YY_2_sum = sum(K_YY.^2) - sum_diag2_Y
     K_XY_2_sum  = sum(K_XY.^2)
@@ -71,60 +68,26 @@ function _mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
     (mmd2, var_est)
 end
 
-@testset "kernels" begin
-    o = ones(Float64, 3, 3)
-    z = zeros(Float64, 3, 3)
-    @test _mmd2_and_variance(o, o, o) == (0, 0)
-    @test _mmd2_and_variance(z, z, z) == (0, 0)
-    @test _mmd2_and_variance(o, z, z) == (1, 0)
-    @test _mmd2_and_variance(z, z, o) == (1, 0)
-    @test _mmd2_and_variance(o, o, z) == (-1, 0)
-    @test _mmd2_and_variance(o, z, z) == (1, 0)
-    @test _mmd2_and_variance(z, o, z) == (-2, 0)
-
-    a = [1 2 3; 4 5 6; 7 8 9]
-    b = a .+ 1
-    c = a .+ 2
-    m, v = _mmd2_and_variance(a, b, c)
-    @test m ≈ 0
-    @test v ≈ -3.1111111111111111111
-
-    a = [1 1 1; 1 1 1; 0 1 0]
-    b = [1 1 1; 1 0 1; 0 1 0]
-    c = [0 1 1; 1 0 1; 0 1 0]
-    m, v = _mmd2_and_variance(a, b, c)
-    @test m ≈ 0.3333333333333
-    @test v ≈ -0.01851852
-
-    a = [0.31067363 0.17995522 0.69170826
-        0.10956897 0.43168305 0.13072019
-        0.98321756 0.66711701 0.4277054]
-
-    b = [0.6308643 0.72541977 0.26667574
-        0.24141601 0.56088218 0.2872887 
-        0.12801543 0.43956629 0.0703913]
-
-    c = [0.68779085 0.68050291 0.47736484
-        0.49306397 0.07206057 0.10580517
-        0.99297355 0.90194579 0.32241892]
-
-    m, v = _mmd2_and_variance(a, b, c)
-    @test m ≈ 0.32443064
-    @test v ≈ 0.33610499
-end
-
-function score(k::GaussianKernel, X, Y)
+function crit_mmd2_var(k::GaussianKernel, X, Y)
     KXX = k.(pairwisel2(X,X))
     KXY = k.(pairwisel2(X,Y))
-    KYY = k.(pairwisel2(y,Y))
-    m, v = _mmd2_and_variance(KXX, KXY, KYY, true)
+    KYY = k.(pairwisel2(Y,Y))
+    m, v = mmd2_and_variance(KXX, KXY, KYY, true)
     m / sqrt(v)
 end
 
-function score(k::IMQKernel, X, Y)
+function crit_mmd2_var(k::IMQKernel, X, Y)
     KXX = k.(pairwisel2(X,X))
     KXY = k.(pairwisel2(X,Y))
-    KYY = k.(pairwisel2(y,Y))
-    m, v = _mmd2_and_variance(KXX, KXY, KYY, false)
+    KYY = k.(pairwisel2(Y,Y))
+    m, v = mmd2_and_variance(KXX, KXY, KYY, false)
     m / sqrt(v)
 end
+
+function split2(x)
+	n = size(x,2)
+	x[:,1:div(n,2)], x[:,div(n,2)+1:end]
+end
+
+crit_mxy_over_mltpl(k, x, y) = mmd(k, x, y) / sqrt(abs(mmd(k, split2(x)...)*mmd(k, split2(y)...)))
+crit_mxy_over_sum(k, x, y) = mmd(k, x, y) / (abs(mmd(k, split2(x)...)) + abs(mmd(k, split2(y)...)))

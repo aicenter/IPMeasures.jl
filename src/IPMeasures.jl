@@ -2,6 +2,7 @@ module IPMeasures
 using StatsBase
 include("kernels.jl")
 include("distances.jl")
+include("criterion.jl")
 
 samplecolumns(x,n) =  (size(x,2) > n) ? x[:,sample(1:size(x,2),n,replace = false)] : x
 
