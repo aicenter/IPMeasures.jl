@@ -65,6 +65,11 @@ function mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
     (mmd2, var_est)
 end
 
+"""
+crit_mmd2_var(k, X, Y)
+
+Calculates the criterion for selection of the width of the kernel based on https://arxiv.org/pdf/1611.04488.pdf
+"""
 function crit_mmd2_var(k::GaussianKernel, X, Y)
     KXX = k.(pairwisel2(X,X))
     KXY = k.(pairwisel2(X,Y))
@@ -81,10 +86,26 @@ function crit_mmd2_var(k::IMQKernel, X, Y)
     m / sqrt(v)
 end
 
+"""
+split2(x)
+
+Splits a vector into halves
+"""
 function split2(x)
 	n = size(x,2)
 	x[:,1:div(n,2)], x[:,div(n,2)+1:end]
 end
 
+"""
+crit_mxy_over_mltpl(k, x, y)
+
+Calculates criterion for selection of the kernel width as MMD(X, Y) / (MMD(X,X) * MMD(Y, Y))
+"""
 crit_mxy_over_mltpl(k, x, y) = mmd(k, x, y) / sqrt(abs(mmd(k, split2(x)...)*mmd(k, split2(y)...)))
+
+"""
+crit_mxy_over_sum(k, x, y)
+
+Calculates criterion for selection of the kernel width as MMD(X, Y) / (MMD(X,X) + MMD(Y, Y))
+"""
 crit_mxy_over_sum(k, x, y) = mmd(k, x, y) / (abs(mmd(k, split2(x)...)) + abs(mmd(k, split2(y)...)))
