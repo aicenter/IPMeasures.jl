@@ -8,7 +8,7 @@
 pairwisel2(x,y) = -2 .* x' * y .+ sum(x.^2, dims = 1)' .+ sum(y.^2,dims = 1)
 pairwisel2(x) = -2 .* x' * x .+ sum(x.^2, dims = 1)' .+ sum(x.^2,dims = 1)
 
-pairwisecos(x, y) = acos.(x' * y / norm(x) / norm(y))
+pairwisecos(x, y) = 1 .- (x' * y / norm(x) / norm(y))
 pairwisecos(x) = pairwisecos(x, x)
 
 struct Mahalanobis{T}
