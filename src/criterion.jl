@@ -75,7 +75,7 @@ function crit_mmd2_var(k::GaussianKernel, X, Y, distfun = pairwisel2)
     KXY = k.(distfun(X,Y))
     KYY = k.(distfun(Y,Y))
     m, v = mmd2_and_variance(KXX, KXY, KYY, true)
-    m / sqrt(v + eps(eltype(m)))
+    m / sqrt(max(v, eps(Float64)))
 end
 
 function crit_mmd2_var(k::IMQKernel, X, Y, distfun = pairwisel2)
@@ -83,7 +83,7 @@ function crit_mmd2_var(k::IMQKernel, X, Y, distfun = pairwisel2)
     KXY = k.(distfun(X,Y))
     KYY = k.(distfun(Y,Y))
     m, v = mmd2_and_variance(KXX, KXY, KYY, false)
-    m / sqrt(v + eps(eltype(m)))
+    m / sqrt(max(v, eps(Float64)))
 end
 
 """
