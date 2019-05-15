@@ -1,4 +1,5 @@
 using Plots, Distributions
+using IPMeasures
 using IPMeasures: crit_mmd2_var, crit_mxy_over_mltpl, crit_mxy_over_sum
 plotlyjs()
 
