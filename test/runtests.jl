@@ -95,5 +95,5 @@ end
     @test v ≈ 0.33610499
 end
 
-include("test/criterion.jl")
+include("criterion.jl")
 
