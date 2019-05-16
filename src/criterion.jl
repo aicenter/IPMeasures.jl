@@ -1,7 +1,7 @@
 """
-mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
+        mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
 
-calculates the mmd and variance according to https://arxiv.org/pdf/1611.04488.pdf
+        calculates the mmd and variance according to https://arxiv.org/pdf/1611.04488.pdf
 """
 function mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
     @assert size(K_XX, 2) == size(K_XY, 2) == size(K_XX, 2)
@@ -66,10 +66,12 @@ function mmd2_and_variance(K_XX, K_XY, K_YY, unit_diagonal=false, biased=false)
 end
 
 """
-crit_mmd2_var(k, X, Y)
+        crit_mmd2_var(k, X, Y)
+        crit_mmd2_var(k, X, Y, n)
 
-Calculates the criterion for selection of the width of the kernel based on https://arxiv.org/pdf/1611.04488.pdf
+        Calculates the criterion for selection of the width of the kernel based on https://arxiv.org/pdf/1611.04488.pdf using at most `n` samples.
 """
+crit_mmd2_var(k::GaussianKernel, X, Y, n::Int, distfun = pairwisel2) = crit_mmd2_var(k, samplecolumns(X, n), samplecolumns(Y, n), distfun)
 function crit_mmd2_var(k::GaussianKernel, X, Y, distfun = pairwisel2)
     KXX = k.(distfun(X,X))
     KXY = k.(distfun(X,Y))
@@ -78,6 +80,7 @@ function crit_mmd2_var(k::GaussianKernel, X, Y, distfun = pairwisel2)
     m / sqrt(max(v, eps(Float64)))
 end
 
+crit_mmd2_var(k::IMQKernel, X, Y, n::Int, distfun = pairwisel2) = crit_mmd2_var(k, samplecolumns(X, n), samplecolumns(Y, n), distfun)
 function crit_mmd2_var(k::IMQKernel, X, Y, distfun = pairwisel2)
     KXX = k.(distfun(X,X))
     KXY = k.(distfun(X,Y))
@@ -87,9 +90,9 @@ function crit_mmd2_var(k::IMQKernel, X, Y, distfun = pairwisel2)
 end
 
 """
-split2(x)
+        split2(x)
 
-Splits a vector into halves
+        Splits a vector into halves
 """
 function split2(x)
 	n = size(x,2)
@@ -97,15 +100,15 @@ function split2(x)
 end
 
 """
-crit_mxy_over_mltpl(k, x, y)
+        crit_mxy_over_mltpl(k, x, y)
 
-Calculates criterion for selection of the kernel width as MMD(X, Y) / SQRT(MMD(X,X) * MMD(Y, Y))
+        Calculates criterion for selection of the kernel width as MMD(X, Y) / SQRT(MMD(X,X) * MMD(Y, Y))
 """
 crit_mxy_over_mltpl(k, x, y, distfun = pairwisel2) = mmd(k, x, y, distfun) / sqrt(abs(mmd(k, split2(x)..., distfun) * mmd(k, split2(y)..., distfun)))
 
 """
-crit_mxy_over_sum(k, x, y)
+        crit_mxy_over_sum(k, x, y)
 
-Calculates criterion for selection of the kernel width as MMD(X, Y) / (MMD(X,X) + MMD(Y, Y))
+        Calculates criterion for selection of the kernel width as MMD(X, Y) / (MMD(X,X) + MMD(Y, Y))
 """
 crit_mxy_over_sum(k, x, y, distfun = pairwisel2) = mmd(k, x, y, distfun) / (abs(mmd(k, split2(x)..., distfun)) + abs(mmd(k, split2(y)..., distfun)))
