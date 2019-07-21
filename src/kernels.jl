@@ -1,11 +1,11 @@
 abstract type AbstractKernel end;
 
 """
-	GaussianKernel(γ<:Number)
+	GaussianKernel(γ)
 
 	implements the standard Gaussian kernel ``exp(-γ * x)
 """
-struct GaussianKernel{T<:Number} <: AbstractKernel
+struct GaussianKernel{T} <: AbstractKernel
 	γ::T
 end
 
@@ -22,7 +22,7 @@ end
 	`c` being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
 
 """
-struct IMQKernel{T<:Number} <: AbstractKernel
+struct IMQKernel{T} <: AbstractKernel
 	c::T
 end
 
@@ -36,10 +36,15 @@ end
 	`c` being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
 
 """
-struct RQKernel{T<:Number} <: AbstractKernel
+struct RQKernel{T} <: AbstractKernel
 	α::T
 end
 
 (m::RQKernel)(x::Number) = (1 + (x + eps(x))/2m.α)^-m.α 
-(m::RQKernel)(x::AbstractArray) = (1 .+(x .+ eps(x)) ./ (2m.α) ).^-m.α 
+(m::RQKernel)(x::AbstractArray) = (1 .+(x .+ eps(eltype(x))) ./ (2m.α) ).^-m.α 
 
+
+struct SumOfKernels{T<:Tuple} <: AbstractKernel
+	ks::T 
+end
+(m::SumOfKernels)(x) = sum(k(x) for k in m.ks)

@@ -1,5 +1,5 @@
 using IPMeasures, Test
-using IPMeasures: mapsum, pairwisel2, mahalanobis, mmd, GaussianKernel, RQKernel, IMQKernel, Mahalanobis, mmdfromdist
+using IPMeasures: mapsum, pairwisel2, mahalanobis, mmd, GaussianKernel, RQKernel, IMQKernel, Mahalanobis, mmdfromdist, SumOfKernels
 
 function distances(Σ,x)
 	d = fill(0.0,size(x,2),size(x,2))
@@ -50,5 +50,15 @@ end
 		@test mmdfromdist(k, d, i, j) ≈ mmd(k, x[:,i],x[:,j])
 		@test mmd(k, randn(1,1000), randn(1,1000)) < 1e-2
 	end
+end
+
+@testset "SumOfKernels" begin
+	x = randn(3,100)
+	y = randn(3,100) .+ 2
+	k1 = GaussianKernel(1.0)
+	k2 = RQKernel(1.0)
+	k3 = IMQKernel(1.0)
+	k = SumOfKernels((k1,k2,k3))
+	@test mmd(k1, x, y) + mmd(k2, x, y) + mmd(k3, x, y) ≈ mmd(k, x, y)
 end
 

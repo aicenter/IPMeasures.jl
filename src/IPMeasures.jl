@@ -30,7 +30,7 @@ function mmdfromdist(k::AbstractKernel, d, idx, cidx)
 	kxx = (mapsum(k, d, idx) - li*k(0.0))/(li^2 - li)
 	kyy = (mapsum(k, d, cidx) - lc*k(0.0))/(lc^2 - lc)
 	kyx = mapsum(k, d, idx, cidx)/ (lc*li)
-	kxx + kyy -2kyx
+	kxx + kyy - 2kyx
 end
 
 
