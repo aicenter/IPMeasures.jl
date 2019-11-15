@@ -14,8 +14,6 @@ function (m::MMD)(x::AbstractArray, y::AbstractArray)
 end
 
 
-pairwisel2(x,y) = pairwise(SqEuclidean(), x, y)
-
 """
 	mmd(AbstractKernel(γ), x, y)
 	mmd(AbstractKernel(γ), x, y, n)
