@@ -4,6 +4,6 @@ authors = ["pevnak <pevnak@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-MLDataUtils = "cc2ba9b6-d476-5e6d-8eaf-a92d5412d41d"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
