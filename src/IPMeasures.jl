@@ -1,6 +1,7 @@
 module IPMeasures
 
-using StatsBase, LinearAlgebra, Distances
+using StatsBase, LinearAlgebra, Distances, ConditionalDists
+using ConditionalDists: Gaussian, AbstractCGaussian
 MetricOrFun = Union{PreMetric,Function}
 
 """
@@ -26,6 +27,8 @@ pairwisel2(x,y) = pairwise(SqEuclidean(), x, y)
 
 include("kernels.jl")
 include("mmd.jl")
+include("kld.jl")
+
  
 """
 	null_distribution(k::AbstractKernel, x, n, l = div(size(x,2),2))
