@@ -1,8 +1,7 @@
 export KLDivergence, kl_divergence
 import Distances: KLDivergence, kl_divergence
 
-function _kld_gaussian(μ1::T, σ1::T, μ2::T, σ2::T) where {T<:AbstractArray}
-    @assert size(μ1) == size(μ2)
+function _kld_gaussian(μ1::AbstractArray, σ1::AbstractArray, μ2::AbstractArray, σ2::AbstractArray)
     k  = size(μ1, 1)
     m1 = sum(σ1 ./ σ2, dims=1)
     m2 = sum((μ2 .- μ1).^2 ./ σ2, dims=1)

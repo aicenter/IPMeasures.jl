@@ -27,7 +27,7 @@ pairwisel2(x,y) = pairwise(SqEuclidean(), x, y)
 
 include("kernels.jl")
 include("mmd.jl")
-include("kld.jl")
+include("kl_divergence.jl")
 
  
 """

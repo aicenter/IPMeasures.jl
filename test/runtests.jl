@@ -1,7 +1,10 @@
+using Test
 using Distances
-using IPMeasures, Test
-using IPMeasures: mapsum, mmd, mmdfromdist, mmd2_and_variance
-using IPMeasures: GaussianKernel, RQKernel, IMQKernel
+using ConditionalDists
+using IPMeasures
+
+using IPMeasures: mapsum, mmd, mmdfromdist, mmd2_and_variance,
+    GaussianKernel, RQKernel, IMQKernel
 
 @testset "mapsum" begin
 	d = randn(5,5)
@@ -64,6 +67,7 @@ end
     @test v ≈ 0.33610499
 end
 
+include("kl_divergence.jl")
 
 using Pkg
 if "Plots" in keys(Pkg.installed()) include("criterion.jl") end
