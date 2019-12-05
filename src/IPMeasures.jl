@@ -23,7 +23,7 @@ function split2(x)
 	x[:,1:div(n,2)], x[:,div(n,2)+1:end]
 end
 
-pairwisel2(x,y) = pairwise(SqEuclidean(), x, y)
+pairwisel2(x,y) = pairwise(SqEuclidean(), x, y, dims=2)
 
 include("kernels.jl")
 include("mmd.jl")
