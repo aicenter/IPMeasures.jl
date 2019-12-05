@@ -1,6 +1,9 @@
-# IPMeasures
+[![Build Status](https://travis-ci.com/aicenter/IPMeasures.jl.svg?branch=master)](https://travis-ci.com/aicenter/IPMeasures.jl)
+[![codecov](https://codecov.io/gh/aicenter/IPMeasures.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/aicenter/IPMeasures.jl)
 
-Implements Integral Probability Measures, at the moment Maximum Mean Discrepancy with Gaussian, RQ, and IPM kernel. The package is made such that it is compatible with Flux.
+# IPMeasures.jl
+
+Implements Integral Probability Measures, at the moment Maximum Mean Discrepancy with Gaussian, RQ, and IPM kernel, as well as KL divergence of Gaussians (from [ConditionalDists.jl](https://github.com/aicenter/ConditionalDists.jl). The package is made such that it is compatible with Flux.jl and uses the Distances.jl interface.
 
 `mmd(GaussianKernel(γ),x,y,γ,n)` Maximum Mean Discrepancy between `x` and `y` using gaussian kernel of bandwidth `γ`
 
@@ -33,10 +36,8 @@ mmd(RQKernel(1.0),randn(2,100),randn(2,100))
 0.026
 ```
 
-
-Furthermore, we ha estimation of Null Hypothesis of kernel `k` of samples `x` from `n` random draws of subsets of size `l`
+Furthermore, we have estimation of Null Hypothesis of kernel `k` of samples `x` from `n` random draws of subsets of size `l`
 ```
 null_distribution(k::AbstractKernel, x, n, l)
 ```
-
-		estimates the null distribution 
+estimates the null distribution 
