@@ -27,5 +27,5 @@ end
 include("mmd.jl")
 include("kl_divergence.jl")
 
-using Pkg
-if "Plots" in keys(Pkg.installed()) include("criterion.jl") end
+# using Pkg
+# if "Plots" in keys(Pkg.installed()) include("criterion.jl") end
