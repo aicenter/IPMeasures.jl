@@ -1,4 +1,17 @@
-abstract type AbstractKernel end;
+export GaussianKernel, IMQKernel, RQKernel
+
+abstract type AbstractKernel end
+
+function kernelsum(k::AbstractKernel, x::AbstractMatrix, y::AbstractMatrix, dist::MetricOrFun)
+    sum(k(dist(x,y))) / (size(x,2) * size(y,2))
+end
+
+function kernelsum(k::AbstractKernel, x::AbstractMatrix, dist::MetricOrFun)
+    l = size(x,2)
+    (sum(k(dist(x,x))) - l*k(0.0))/(l^2 - l)
+end
+
+kernelsum(k::AbstractKernel, x::AbstractVector, dist::MetricOrFun) = zero(eltype(x))
 
 """
 	GaussianKernel(γ<:Number)
@@ -42,4 +55,3 @@ end
 
 (m::RQKernel)(x::Number) = (1 + (x + eps(x))/2m.α)^-m.α 
 (m::RQKernel)(x::AbstractArray) = (1 .+(x .+ eps(eltype(x))) ./ (2m.α) ).^-m.α 
-
