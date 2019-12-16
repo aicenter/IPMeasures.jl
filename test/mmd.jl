@@ -1,3 +1,21 @@
+@testset "mmd" begin
+    T = Float64
+    k = GaussianKernel(1)
+    x = rand(T, 5, 2)
+    y = rand(T, 5, 2)
+    m = mmd(k, x, y)
+    @test typeof(m) == T
+
+
+    T = Float32
+    k = GaussianKernel(1f0)
+    x = rand(T, 5, 2)
+    y = rand(T, 5, 2)
+    m = mmd(k, x, y)
+    @test typeof(m) == T
+end
+
+
 @testset "mmd2 and variance" begin
     o = ones(Float64, 3, 3)
     z = zeros(Float64, 3, 3)
