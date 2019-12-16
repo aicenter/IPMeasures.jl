@@ -6,9 +6,9 @@ function kernelsum(k::AbstractKernel, x::AbstractMatrix, y::AbstractMatrix, dist
     sum(k(dist(x,y))) / (size(x,2) * size(y,2))
 end
 
-function kernelsum(k::AbstractKernel, x::AbstractMatrix, dist::MetricOrFun)
+function kernelsum(k::AbstractKernel, x::AbstractMatrix{T}, dist::MetricOrFun) where T
     l = size(x,2)
-    (sum(k(dist(x,x))) - l*k(0.0))/(l^2 - l)
+    (sum(k(dist(x,x))) - l*k(T(0)))/(l^2 - l)
 end
 
 kernelsum(k::AbstractKernel, x::AbstractVector, dist::MetricOrFun) = zero(eltype(x))
@@ -29,11 +29,11 @@ end
 """
 	ImqKernel(c)
 
-	inverse polynomial kernel ``\\frac{C}{C + x}`` used
-	in Tolstikhin, Ilya, et al. "Wasserstein Auto-Encoders." arXiv preprint arXiv:1711.01558 (2017)
+Inverse polynomial kernel ``\\frac{C}{C + x}`` used in Tolstikhin, Ilya, et al.
+"Wasserstein Auto-Encoders." arXiv preprint arXiv:1711.01558 (2017)
 
-	`c` being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
-
+`c` being equal to 2d σ2z, which is expected squared distance between two
+samples drawn from p(x).
 """
 struct IMQKernel{T<:Number} <: AbstractKernel
 	c::T

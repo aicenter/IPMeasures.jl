@@ -1,8 +1,8 @@
 export MMD, mmd, mmd2_and_variance
 
-struct MMD <: PreMetric
-    kernel::AbstractKernel
-    dist::MetricOrFun
+struct MMD{K<:AbstractKernel,D<:MetricOrFun} <: PreMetric
+    kernel::K
+    dist::D
 end
 
 
