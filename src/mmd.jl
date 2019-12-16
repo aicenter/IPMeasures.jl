@@ -140,14 +140,26 @@ crit_mxy_over_sum(k, x, y, dist = pairwisel2) =
     mmd(k, x, y, dist) / (abs(mmd(k, split2(x)..., dist)) + abs(mmd(k, split2(y)..., dist)))
 
 function mmdfromdist(k::AbstractKernel, d, idx, cidx)
+    _z = eltype(d)(0)
 	li, lc = length(idx), length(cidx)
-	kxx = (mapsum(k, d, idx) - li*k(0.0))/(li^2 - li)
-	kyy = (mapsum(k, d, cidx) - lc*k(0.0))/(lc^2 - lc)
+	kxx = (mapsum(k, d, idx) - li*k(_z))/(li^2 - li)
+	kyy = (mapsum(k, d, cidx) - lc*k(_z))/(lc^2 - lc)
 	kyx = mapsum(k, d, idx, cidx)/ (lc*li)
 	kxx + kyy -2kyx
 end
 
+function mapsum(f, d, idx)
+    s = eltype(d)(0)
+    @inbounds for j in idx, i in idx
+        s+= f(d[i,j])
+    end
+    return s
+end
 
-mapsum(f, d, idx) = (s = 0.0; @inbounds for j in idx, i in idx s+= f(d[i,j]) end; s)
-mapsum(f, d, rowidx, colidx) =
-    (s = 0.0; @inbounds for i in rowidx, j in colidx s+= f(d[i,j]) end; s)
+function mapsum(f, d, rowidx, colidx)
+    s = eltype(d)(0)
+    @inbounds for i in rowidx, j in colidx
+        s+= f(d[i,j])
+    end
+    return s
+end
