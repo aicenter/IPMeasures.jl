@@ -1,4 +1,17 @@
-abstract type AbstractKernel end;
+export GaussianKernel, IMQKernel, RQKernel
+
+abstract type AbstractKernel end
+
+function kernelsum(k::AbstractKernel, x::AbstractMatrix, y::AbstractMatrix, dist::MetricOrFun)
+    sum(k(dist(x,y))) / (size(x,2) * size(y,2))
+end
+
+function kernelsum(k::AbstractKernel, x::AbstractMatrix{T}, dist::MetricOrFun) where T
+    l = size(x,2)
+    (sum(k(dist(x,x))) - l*k(T(0)))/(l^2 - l)
+end
+
+kernelsum(k::AbstractKernel, x::AbstractVector, dist::MetricOrFun) = zero(eltype(x))
 
 """
 	GaussianKernel(γ)
@@ -16,11 +29,11 @@ end
 """
 	ImqKernel(c)
 
-	inverse polynomial kernel ``\\frac{C}{C + x}`` used
-	in Tolstikhin, Ilya, et al. "Wasserstein Auto-Encoders." arXiv preprint arXiv:1711.01558 (2017)
+Inverse polynomial kernel ``\\frac{C}{C + x}`` used in Tolstikhin, Ilya, et al.
+"Wasserstein Auto-Encoders." arXiv preprint arXiv:1711.01558 (2017)
 
-	`c` being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
-
+`c` being equal to 2d σ2z, which is expected squared distance between two
+samples drawn from p(x).
 """
 struct IMQKernel{T} <: AbstractKernel
 	c::T
@@ -42,9 +55,3 @@ end
 
 (m::RQKernel)(x::Number) = (1 + (x + eps(x))/2m.α)^-m.α 
 (m::RQKernel)(x::AbstractArray) = (1 .+(x .+ eps(eltype(x))) ./ (2m.α) ).^-m.α 
-
-
-struct SumOfKernels{T<:Tuple} <: AbstractKernel
-	ks::T 
-end
-(m::SumOfKernels)(x) = sum(k(x) for k in m.ks)

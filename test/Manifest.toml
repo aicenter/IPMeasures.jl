@@ -176,6 +176,12 @@ git-tree-sha1 = "e756da6cee76a5f1436a05827fa8fdf3badc577f"
 uuid = "0c68f7d7-f131-5f86-a1c3-88cf8149b2d7"
 version = "2.0.1"
 
+[[IPMeasures]]
+deps = ["ConditionalDists", "Distances", "LinearAlgebra", "StatsBase"]
+path = "/home/niklas/repos/IPMeasures.jl"
+uuid = "d7dc6e0c-a753-11e8-227e-b362679e0b17"
+version = "0.1.0"
+
 [[IRTools]]
 deps = ["InteractiveUtils", "MacroTools", "Test"]
 git-tree-sha1 = "72421971e60917b8cd7737f9577c4f0f87eab306"
