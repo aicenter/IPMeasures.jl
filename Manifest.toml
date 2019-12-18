@@ -82,7 +82,9 @@ version = "0.2.0"
 
 [[ConditionalDists]]
 deps = ["Flux", "Random", "Statistics"]
-path = "/home/niklas/repos/ConditionalDists.jl/"
+git-tree-sha1 = "8408ad6f4d449ccb1bc17d714beeb9d513056888"
+repo-rev = "master"
+repo-url = "https://github.com/aicenter/ConditionalDists.jl"
 uuid = "c648c4dd-c1e0-49a6-84b9-144ae7fd2468"
 version = "0.1.0"
 
