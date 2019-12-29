@@ -14,11 +14,11 @@ function samplecolumns(x::AbstractMatrix, n::Int)
 end
 
 """
-    split2(x)
+    split2(x::AbstractMatrix)
 
-Splits a vector into halves.
+Splits a matrix into halves.
 """
-function split2(x)
+function split2(x::AbstractMatrix)
 	n = size(x,2)
 	x[:,1:div(n,2)], x[:,div(n,2)+1:end]
 end
@@ -36,7 +36,7 @@ include("kl_divergence.jl")
 Estimates the null distribution of samples `x` from `n` random draws of subsets of size `l`
 """
 null_distribution(k::AbstractKernel, x, n, l = div(size(x,2),2)) =
-    _null_distribution(k, pairwisel2(x), n, l )
+    _null_distribution(k, pairwisel2(x,x), n, l )
 
 function _null_distribution(k, d, n, l)
 	ns = size(d,2)
