@@ -33,7 +33,7 @@ end
 
     dcpu = pairwisel2(x,y)
     dgpu = pairwisel2(gpu(x), gpu(y))
-    @test dgpu isa CuArray
+    @test dgpu isa typeof(gpu(x))
     @test dcpu ≈ cpu(dgpu) rtol=1e-2
 end
 
