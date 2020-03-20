@@ -28,8 +28,8 @@ end
 
 @testset "pairwisel2" begin
     n = 20
-    x = rand(Float32, n) .* 45
-    y = rand(Float32, n) .* -120
+    x = rand(Float32, n, 3) .* 45
+    y = rand(Float32, n, 3) .* -120
 
     dcpu = pairwisel2(x,y)
     dgpu = pairwisel2(gpu(x), gpu(y))
