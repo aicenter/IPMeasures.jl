@@ -3,8 +3,6 @@ module IPMeasures
 using StatsBase
 using LinearAlgebra
 using Distances
-using CUDAdrv
-using CUDAnative
 using CuArrays
 
 using ConditionalDists
