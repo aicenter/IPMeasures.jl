@@ -2,9 +2,12 @@ using Test
 using Distances
 using ConditionalDists
 using IPMeasures
+using CuArrays
+using Flux
 
 using IPMeasures: mapsum, mmd, mmdfromdist, mmd2_and_variance,
-    GaussianKernel, RQKernel, IMQKernel, null_distribution, samplecolumns, split2
+    GaussianKernel, RQKernel, IMQKernel, null_distribution, samplecolumns,
+    split2, pairwisel2
 
 @testset "samplecolumns" begin
     xs = randn(2,5)
@@ -21,6 +24,17 @@ end
     (a,b) = split2(x)
     @test all(x[:,1:5] .== a)
     @test all(x[:,6:10] .== b)
+end
+
+@testset "pairwisel2" begin
+    n = 20
+    x = rand(Float32, n) .* 45
+    y = rand(Float32, n) .* -120
+
+    dcpu = pairwisel2(x,y)
+    dgpu = pairwisel2(gpu(x), gpu(y))
+    @test dgpu isa CuArray
+    @test dcpu ≈ cpu(dgpu) rtol=1e-2
 end
 
 @testset "mapsum" begin
