@@ -6,7 +6,7 @@ using Distances
 using CuArrays
 
 using ConditionalDists
-using ConditionalDists: Gaussian, AbstractCGaussian
+using ConditionalDists: Gaussian, AbstractConditionalGaussian
 
 const MetricOrFun = Union{PreMetric,Function}
 const CuMatrix = CuArray{<:Float32,2}

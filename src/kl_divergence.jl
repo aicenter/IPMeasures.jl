@@ -17,10 +17,11 @@ end
 
 kl_divergence(p::Gaussian, q::Gaussian) = KLDivergence()(p, q)
 
-function (m::KLDivergence)(p::AbstractCGaussian, q::Gaussian, z::AbstractArray)
+function (m::KLDivergence)(p::AbstractConditionalGaussian, q::Gaussian, z::AbstractArray)
     (μ1, σ1) = mean_var(p, z)
     (μ2, σ2) = mean_var(q)
     _kld_gaussian(μ1, σ1, μ2, σ2)
 end
 
-kl_divergence(p::AbstractCGaussian, q::Gaussian, z::AbstractArray) = KLDivergence()(p,q,z)
+kl_divergence(p::AbstractConditionalGaussian, q::Gaussian, z::AbstractArray) =
+    KLDivergence()(p,q,z)
