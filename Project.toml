@@ -1,7 +1,7 @@
 name = "IPMeasures"
 uuid = "d7dc6e0c-a753-11e8-227e-b362679e0b17"
 authors = ["pevnak <pevnak@gmail.com>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 ConditionalDists = "c648c4dd-c1e0-49a6-84b9-144ae7fd2468"
@@ -12,8 +12,8 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 ConditionalDists = "0.2"
+CuArrays = "1.7"
 Distances = "0.8"
-Flux = "0.10"
 StatsBase = "0.32"
 julia = "1"
 
