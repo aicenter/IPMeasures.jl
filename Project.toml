@@ -1,7 +1,7 @@
 name = "IPMeasures"
 uuid = "d7dc6e0c-a753-11e8-227e-b362679e0b17"
 authors = ["pevnak <pevnak@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 CUDAdrv = "c5f51814-7f29-56b8-a69c-e4d8f6be1fde"
@@ -14,7 +14,7 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
-ConditionalDists = "0.1"
+ConditionalDists = "0.2"
 Distances = "0.8"
 Flux = "0.10"
 StatsBase = "0.32"
