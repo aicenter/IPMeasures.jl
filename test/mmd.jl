@@ -1,14 +1,15 @@
 @testset "mmd" begin
-    T = Float64
-    k = GaussianKernel(1)
-    x = rand(T, 5, 2)
-    y = rand(T, 5, 2)
+    T = Float32
+    k = GaussianKernel(1f0)
+    x = rand(T, 5, 2) |> gpu
+    y = rand(T, 5, 2) |> gpu
     m = mmd(k, x, y)
     @test typeof(m) == T
 
+    gs = Flux.gradient(mmd, k, x, y)
 
-    T = Float32
-    k = GaussianKernel(1f0)
+    T = Float64
+    k = GaussianKernel(1)
     x = rand(T, 5, 2)
     y = rand(T, 5, 2)
     m = mmd(k, x, y)
