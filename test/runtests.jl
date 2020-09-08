@@ -1,8 +1,9 @@
 using Test
 using Distances
+using Distributions
 using ConditionalDists
 using IPMeasures
-using CuArrays
+using CUDA
 using Flux
 
 using IPMeasures: mapsum, mmd, mmdfromdist, mmd2_and_variance,

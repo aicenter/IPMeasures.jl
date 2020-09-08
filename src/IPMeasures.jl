@@ -3,10 +3,11 @@ module IPMeasures
 using StatsBase
 using LinearAlgebra
 using Distances
-using CuArrays
+using CUDA
 
+using Distributions
+using DistributionsAD
 using ConditionalDists
-using ConditionalDists: Gaussian, AbstractConditionalGaussian
 
 const MetricOrFun = Union{PreMetric,Function}
 const CuMatrix = CuArray{<:Float32,2}
