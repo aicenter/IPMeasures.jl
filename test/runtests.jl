@@ -6,6 +6,7 @@ using IPMeasures
 using CUDA
 using Flux
 
+
 using IPMeasures: mapsum, mmd, mmdfromdist, mmd2_and_variance,
     GaussianKernel, RQKernel, IMQKernel, null_distribution, samplecolumns,
     split2, pairwisel2
@@ -65,6 +66,3 @@ end
 
 include("mmd.jl")
 include("kl_divergence.jl")
-
-# using Pkg
-# if "Plots" in keys(Pkg.installed()) include("criterion.jl") end

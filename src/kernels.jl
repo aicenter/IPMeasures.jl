@@ -14,11 +14,11 @@ end
 kernelsum(k::AbstractKernel, x::AbstractVector, dist::MetricOrFun) = zero(eltype(x))
 
 """
-	GaussianKernel(γ<:Number)
+	GaussianKernel(γ)
 
 	implements the standard Gaussian kernel ``exp(-γ * x)
 """
-struct GaussianKernel{T<:Number} <: AbstractKernel
+struct GaussianKernel{T} <: AbstractKernel
 	γ::T
 end
 
@@ -35,7 +35,7 @@ Inverse polynomial kernel ``\\frac{C}{C + x}`` used in Tolstikhin, Ilya, et al.
 `c` being equal to 2d σ2z, which is expected squared distance between two
 samples drawn from p(x).
 """
-struct IMQKernel{T<:Number} <: AbstractKernel
+struct IMQKernel{T} <: AbstractKernel
 	c::T
 end
 
@@ -49,7 +49,7 @@ end
 	`c` being equal to 2d σ2z, which is expected squared distance between two samples drawn from p(x).
 
 """
-struct RQKernel{T<:Number} <: AbstractKernel
+struct RQKernel{T} <: AbstractKernel
 	α::T
 end
 
