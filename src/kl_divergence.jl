@@ -25,12 +25,6 @@ end
 (m::KLDivergence)(p::ConditionalDists.BMN, q::MvNormal) = _kld_gaussian(p,q)
 (m::KLDivergence)(p::ConditionalDists.BMN, q::TuMvNormal) = _kld_gaussian(p,q)
 
-kl_divergence(p,q) = KLDivergence()(p,q)
-# kl_divergence(p::MvNormal, q::MvNormal) = KLDivergence()(p,q)
-# kl_divergence(p::TuMvNormal, q::TuMvNormal) = KLDivergence()(p,q)
-# kl_divergence(p::ConditionalDists.BMN, q::MvNormal) = KLDivergence()(p,q)
-
-
 function (m::KLDivergence)(p::ConditionalMvNormal, q::MvNormal, z::AbstractArray)
     _kld_gaussian(condition(p,z), q)
 end
