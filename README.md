@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/aicenter/IPMeasures.jl.svg?branch=master)](https://travis-ci.com/aicenter/IPMeasures.jl)
+![Run tests](https://github.com/aicenter/IPMeasures.jl/workflows/Run%20tests/badge.svg)
 [![codecov](https://codecov.io/gh/aicenter/IPMeasures.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/aicenter/IPMeasures.jl)
 
 # IPMeasures.jl
