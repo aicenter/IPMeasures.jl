@@ -1,7 +1,7 @@
 name = "IPMeasures"
 uuid = "d7dc6e0c-a753-11e8-227e-b362679e0b17"
 authors = ["pevnak <pevnak@gmail.com>"]
-version = "0.2.3"
+version = "0.2.4"
 
 [deps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
