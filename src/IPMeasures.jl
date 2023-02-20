@@ -5,10 +5,6 @@ using LinearAlgebra
 using Distances
 using CUDA
 
-using Distributions
-using DistributionsAD
-using ConditionalDists
-
 const MetricOrFun = Union{PreMetric,Function}
 const CuMatrix = CuArray{<:Float32,2}
 
@@ -61,7 +57,6 @@ pairwisecos(x::AbstractMatrix) = pairwisecos(x,x)
 
 include("kernels.jl")
 include("mmd.jl")
-include("kl_divergence.jl")
 
  
 """

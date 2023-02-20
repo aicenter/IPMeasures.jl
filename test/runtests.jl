@@ -1,7 +1,5 @@
 using Test
 using Distances
-using Distributions
-using ConditionalDists
 using IPMeasures
 using CUDA
 using Flux
@@ -65,4 +63,3 @@ end
 end
 
 include("mmd.jl")
-include("kl_divergence.jl")
