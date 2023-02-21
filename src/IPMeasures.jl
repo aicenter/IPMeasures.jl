@@ -62,7 +62,7 @@ include("mmd.jl")
 """
 	null_distribution(k::AbstractKernel, x, n, l = div(size(x,2),2))
 
-Estimates the null distribution of samples `x` from `n` random draws of subsets of size `l`
+Estimates null distribution of samples `x` from `n` random draws of subsets of size `l`
 """
 null_distribution(k::AbstractKernel, x, n, l = div(size(x,2),2)) =
     _null_distribution(k, pairwisel2(x,x), n, l )
